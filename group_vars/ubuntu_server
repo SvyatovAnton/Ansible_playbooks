@@ -1,0 +1,4 @@
+---
+ansible_user           : anton
+ansible_privet_ssh_key : /root/.ssh/id_rsa
+owner: Nikita

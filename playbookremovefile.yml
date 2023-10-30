@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: true
+  tasks:
+
+  - name: find file to directory my web site
+    find:
+      paths: /var/www/html
+      file_type: file
+      recurse: true
+      patterns: ['*.png','*.html','*j2','*j2.save']
+    register: find_class_to_dir
+
+  - name: Show finded classes list
+    debug:
+      var: find_class_to_dir.files | map(attribute='path') | list  
+
+  - name: Remove my web site
+    file:
+      path: "{{ item }}"
+      state: absent
+    loop: "{{ find_class_to_dir.files |  map(attribute='path') | list }}"
+   

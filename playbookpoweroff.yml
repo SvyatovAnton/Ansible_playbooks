@@ -1,0 +1,8 @@
+---
+- name: "Off my Hosts"
+  hosts: all
+  become: yes
+  tasks:
+
+  - name: "Off my Hosts"
+    shell: poweroff

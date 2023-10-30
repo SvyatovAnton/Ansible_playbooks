@@ -1,0 +1,77 @@
+
+---
+- name: "Install Apache and Upload my Page  to my Web Servers and Docker Server"
+  hosts: all
+  become: true
+  vars:
+    source_folder: /root/MyWebSite2
+    destin_folder: /var/www/html
+
+  tasks:
+  - name: "Check and Print my OS Family"
+    debug:
+      var: ansible_os_family
+
+  - block: #====================Block for RedHat==================
+
+       - name: "Install Apache for my Web Servers os_family RedHat"
+         yum:
+           name: "httpd"
+           state: latest
+           update_cache: yes
+
+         
+       - name: "Start my web servers evry boot"
+         service:
+           name: "httpd"
+           state: started
+           enabled: yes
+    when: ansible_os_family == "RedHat"
+
+  - block: #========================Block for Debian======================
+ 
+       - name: "Install Apache Web Server for os_family Debian"
+         apt:
+           name: "apache2"
+           state: latest
+           update_cache: yes
+
+       
+       - name: "Start My Apache evry boot"
+         service:
+           name: "apache2"
+           state: started
+           enabled: yes
+    when: ansible_os_family == "Debian"
+
+  - name: "Copy foldr MyWebSite2"
+    ansible.builtin.copy:
+      src: "{{ source_folder }}"
+      dest: "{{ destin_folder }}"
+      mode: 0555
+    
+#    loop:
+#       - "index.html"
+#       - "ru.png"
+#       - "ru1.png"
+#       - "ru2.png"
+#       - "ru3.png"
+#       - "ru4.png"
+#       - "ru5.png"
+
+    notify:
+      - Restart Apache os_family RedHat
+      - Restart Apache os_family Debian
+
+  handlers:
+  - name: Restart Apache os_family RedHat
+    service:
+      name: "httpd"
+      state: restarted
+    when: ansible_os_family == "RedHat"
+
+  - name: Restart Apache os_family Debian
+    service:
+      name: "apache2"
+      state: restarted
+    when: ansible_os_family == "Debian" 

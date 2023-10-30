@@ -1,0 +1,30 @@
+---
+- name: "Install Apache and Upload my web Page"
+  hosts: all
+  become: yes
+  tasks:
+  
+  - name: "Install Apache to my web servers"
+    yum:
+      name: "httpd"
+      state: latest
+   
+  - name: "Copy my Web page to My Web servers"
+    template:
+      src: /root/MyWebSite2/index.html
+      dest: /var/www/html
+      mode: 0555
+    notify: Restart Apache 
+
+  - name: "Start Apache it Enable evry boot"
+    service:
+      name: "httpd"
+      state: started
+      enabled: yes
+  
+  handlers: 
+  - name: Restart Apache
+    service:
+      name: "httpd"   
+      state: restarted
+ 

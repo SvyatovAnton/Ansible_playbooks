@@ -1,0 +1,7 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Delay shutting down the remote host
+    community.general.shutdown:
+     delay: 5

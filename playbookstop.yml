@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Stop Apache on servers RedHat
+    service:
+      name: httpd
+      state: stopped
+      enabled: no 
+    when: ansible_os_family == "RedHat"
+
+  - name: Stop Apache on  servers Debian
+    service: 
+      name: apache2
+      state: stopped
+      enabled: no
+    when: ansible_os_family == 'Debian'

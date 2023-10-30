@@ -1,0 +1,85 @@
+---
+- name: "Install packeges and Enable Web Servers evry boot"
+  hosts: all
+  become: yes
+  vars:
+    source_folder: /root/MyWebSite2
+    destin_folder: /var/www/html
+  tasks:
+  - name: "Check and Print My OS Family"
+    debug:
+      var: ansible_os_family
+  - name: "Check and Print ansible_distribution_version"
+    debug:
+      var: ansible_distribution_version
+  - name: "Check and Print ansible_distribution"
+    debug:
+      var: ansible_distribution
+  - block:
+      - name: Install Apache,Redis,PostgreSQL for RedHat
+        yum:
+          name: "{{ item }}"
+          state: latest
+          update_cache: yes
+        loop:
+          - "httpd"
+          - "redis"
+          - "postgresql"
+      - name: "Start My Web Servers evry boot"
+        service:
+          name: httpd
+          state: started
+          enabled: yes
+    when: ansible_os_family == "RedHat"
+  - block:
+    - name: "Install Apache,Redis,PostgreSQL for Debian"
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - "redis"
+        - "apache2"
+        - "postgresql"
+    - name: "Start My Web Server evry boot"
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+    when: ansible_os_family == "Debian"
+    
+  - name: "Copy My Home Page to my servers"
+    copy:
+      src={{ source_folder }}/{{ item }}
+      dest={{ destin_folder }}
+      mode=0555
+    loop:
+      - "index1.html"
+      - "ru.png"
+      - "ru1.png"
+      - "ru3.png"
+      - "ru4.png"
+      - "ru5.png"
+
+#  - name: "Copy MyWebSite2 to my servers" 
+#    copy:
+#      src: "{{ item }}" 
+#      dest: "{{ destin_folder }}"
+#      mode: 0555
+#    with_fileglob: "{{ source_folder }}/*"
+    notify:
+      - Restart Apache os_family RedHat
+      - Restart Apache os_family Debian
+        
+  handlers:
+  - name: Restart Apache os_family RedHat
+    service:
+      name: httpd
+      state: restarted
+    when: ansible_os_family == "RedHat"
+      
+  - name: Restart Apache os_family Debian
+    service:
+      name: apache2
+      state: restarted
+    when: ansible_os_family == "Debian"

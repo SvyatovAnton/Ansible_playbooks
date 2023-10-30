@@ -1,0 +1,9 @@
+--- 
+- hosts: all
+  become: yes
+  tasks: 
+  
+  - template:
+      src=/root/MyWebSite2/index.j2
+      dest=/var/www/html/index.html
+      mode=0555 

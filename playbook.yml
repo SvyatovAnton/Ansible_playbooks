@@ -1,0 +1,7 @@
+
+- name: "ping to my servers"
+  hosts: all
+  become: yes
+  tasks:
+  - name: "Ping to my servers"
+    ping:

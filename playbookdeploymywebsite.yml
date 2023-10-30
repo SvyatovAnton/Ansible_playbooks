@@ -1,0 +1,11 @@
+---
+- name: Deploy my Web Site
+  hosts: all
+  become: yes
+  tasks:
+  - name: Deploy My Web Site
+    copy:
+      src: "{{ item }}"
+      dest: /var/www/html
+      mode: 0555
+    with_fileglob: /root/MyWebSite2/*

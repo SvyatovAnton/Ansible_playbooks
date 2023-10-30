@@ -1,0 +1,13 @@
+---
+- name: Remove Redis and PostgreSQL and Apache
+  hosts: all
+  become: yes
+  tasks:
+  - name: Remove Redis and PostgreSQL and Apache
+    yum:
+      name: "{{ item }}"
+      state: absent
+    loop:
+      - redis
+      - postgresql
+      - httpd
