@@ -2,6 +2,7 @@
 - name: "ping to my servers"
   hosts: all
   become: yes
+  become_method: sudo
   tasks:
   - name: "Ping to my servers"
     ping:

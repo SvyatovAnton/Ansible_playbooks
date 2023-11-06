@@ -54,7 +54,7 @@
       dest={{ destin_folder }}
       mode=0555
     loop:
-      - "index1.html"
+      - "index.html"
       - "ru.png"
       - "ru1.png"
       - "ru3.png"
