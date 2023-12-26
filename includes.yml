@@ -1,0 +1,17 @@
+---
+- name: "Study playbook"
+  hosts: all
+  become: true
+  
+  vars:
+    mytext: "Hallo from DevOps"
+ 
+  tasks:
+  - name: "Ping my servers"
+    ping:
+ 
+  - name: "Create Folder"
+    include: create_folders.yml
+ 
+  - name: "Create Files"
+    include: create_folders.yml

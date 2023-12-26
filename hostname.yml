@@ -1,0 +1,8 @@
+---
+- name: "Print on my servers DNS name"
+  hosts: all
+  become: yes
+  tasks:
+ 
+  debug:
+    msg: "{{ hostname_result.stdout }}"

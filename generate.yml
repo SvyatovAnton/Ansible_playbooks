@@ -1,0 +1,19 @@
+---
+- name: "GENERATE index.html"
+  hosts: "{{ HOSTS }}"
+  become: yes
+  tasks:
+  - name: "Generate vars to index.html"
+    template:
+      src: /root/MyWebSite/index.j2
+      dest: /var/www/html/index.html
+      mode: 0555
+    notify:
+      - Restart Apache RedHat 
+
+  handlers:
+  - name: Restart Apache RedHat
+    service:
+      name: httpd
+      state: restarted
+      

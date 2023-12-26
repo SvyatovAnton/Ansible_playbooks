@@ -1,0 +1,81 @@
+---
+- name: "Install Apache to my servers"
+  hosts: "{{ MYHOSTS }}"
+  become: yes
+  vars:
+    source_folder: /root/MyWebSite
+    destin_folder: /var/www/html
+  tasks:
+  - name: "Check and Print ansible_os_family"
+    debug:
+      var: ansible_os_family
+
+  - block:
+      - name: "Install Apache for my Web Servers os_family RedHat"
+        yum:
+          name: "httpd"
+          state: latest
+          update_cache: yes
+      
+      - name: "Start Apache and Enable at evry boot"
+        service:
+          name: httpd
+          state: started
+          enabled: yes
+  
+
+      - name: Add user
+        user:
+          name: newuser
+          password: "{{ 'password' | password_hash('sha512', 'mysecretsalt') }}"
+          groups: wheel
+          append: yes      
+    when: ansible_os_family == "RedHat"
+   
+  - block:
+      - name: "Install Apache for my Web Servers os_family Debian"
+        apt:
+          name: "apache2"
+          state: latest
+          
+
+      - name: "Start Apache and Enable at evry boot"
+        service:
+          name: apache2
+          state: started
+          enabled: yes
+ 
+    when: ansible_os_family == "Debian"
+   
+  - name: "Generate ingex.html file"
+    template:
+      src: "{{ source_folder }}/index.j2"
+      dest: "{{ destin_folder }}/index.html"
+      mode: 0555
+    notify: 
+      - Restart Apache RedHat
+      - Restart Apache Debian
+
+  - name: "Copy MyWebSite to WEB servers"
+    copy:
+      src: "{{ item }}"
+      dest: "{{ destin_folder }}"
+      mode: 0555
+    with_fileglob: "{{ source_folder }}/*"
+    notify:
+      - Restart Apache RedHat
+      - Restart Apache Debian
+
+  handlers:
+  - name: Restart Apache RedHat
+    service:
+      name: httpd
+      state: restarted
+    when: ansible_os_family == "RedHat"
+
+  - name: Restart Apache Debian
+    service: 
+      name: apache2
+      state: restarted
+    when: ansible_os_family == "Debian"
+

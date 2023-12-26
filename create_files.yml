@@ -1,0 +1,17 @@
+---
+  - name: "Create new file1"
+    copy:
+      dest: /root/include/file1
+      content: |
+        Text Line1, in file1
+        Text Line2, in file1
+        Text Line3, {{ mytext }}
+
+  - name: "Create new file2"
+    copy:
+      dest: /root/include/file2
+      content: |
+        Text Line1, in file2
+        Text Line2, in file2
+        Text Line3, {{ mytext }}
+

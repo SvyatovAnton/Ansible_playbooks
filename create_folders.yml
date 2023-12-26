@@ -1,0 +1,13 @@
+---
+ - name: "Create new folder1"
+    file:
+      path: /root/include/folder1
+      state: directory
+      mode: 0755
+
+  - name: Create new filder2"
+    file:
+      path: /root/include/folder2
+      state: directory
+      mode: 0755
+
