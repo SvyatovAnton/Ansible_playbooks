@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Remove Software
+    package:
+      name: "{{ item }}"
+      state: absent
+    loop:
+        - redis
+        - pjstgresql
+        - httpd
+        - apache2
+      
+
+
+
+

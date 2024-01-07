@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Remove Software
+    package:
+      name: 
+        - redis
+        - pjstgresql
+        - httpd
+        - apache2
+      state: absent
+
+
+
+
